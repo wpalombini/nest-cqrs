@@ -17,12 +17,7 @@ export class PaymentsController {
   }
 
   @Post('status/:id')
-  async updateStatus(
-    @Param('id') id: string,
-    @Body() dto: UpdateStatusDto,
-  ): Promise<string> {
-    return await this.commandBus.execute(
-      new UpdateStatusCommand(id, dto.status),
-    );
+  async updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto): Promise<string> {
+    return await this.commandBus.execute(new UpdateStatusCommand(id, dto.status));
   }
 }
