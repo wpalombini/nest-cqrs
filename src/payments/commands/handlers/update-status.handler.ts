@@ -1,21 +1,26 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateStatusCommand } from '../impl/update-status.command';
+import { UpdateStatusSuccessfulEvent } from 'src/payments/events/impl/update-status-successful.event';
 
 @CommandHandler(UpdateStatusCommand)
-export class UpdateStatusCommandHandler
-  implements ICommandHandler<UpdateStatusCommand>
-{
+export class UpdateStatusCommandHandler implements ICommandHandler<UpdateStatusCommand> {
+  constructor(private readonly eventBus: EventBus) {}
+
   async execute(command: UpdateStatusCommand) {
-    const result = await new Promise((resolve) => {
+    // Update the status of the payment
+    const response = await new Promise((resolve) => {
       setTimeout(() => {
-        resolve(
-          `Status of payment ${command.paymentId} updated to ${command.status}`,
-        );
+        resolve('Status updated');
       }, 1000);
     });
 
-    console.log(result);
+    console.log(
+      `UpdateStatusCommandHandler: ${new Date().toTimeString()}: Payment ${command.paymentId} status updated to ${command.status}`,
+    );
 
-    return result;
+    // Publish an event that the status was updated
+    this.eventBus.publish(new UpdateStatusSuccessfulEvent(command.paymentId, command.status));
+
+    return response;
   }
 }
