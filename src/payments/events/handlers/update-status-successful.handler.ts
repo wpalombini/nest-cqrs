@@ -1,8 +1,8 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { UpdateStatusSuccessfulEvent } from '../impl/update-status-successful.event';
+import { UpdateStatusSuccessfulEvent } from '../impl';
 
 @EventsHandler(UpdateStatusSuccessfulEvent)
-export class UpdateStatusSuccessfulHandler implements IEventHandler<UpdateStatusSuccessfulEvent> {
+export class UpdateStatusSuccessfulEventHandler implements IEventHandler<UpdateStatusSuccessfulEvent> {
   handle(event: UpdateStatusSuccessfulEvent) {
     new Promise<void>((resolve) => {
       setTimeout(() => {
